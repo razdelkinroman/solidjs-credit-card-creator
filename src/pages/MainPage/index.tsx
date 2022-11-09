@@ -1,10 +1,9 @@
-import { Component } from 'solid-js';
-import { createStore } from 'solid-js/store';
+import { Component, For } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { CardPreview } from '../../components/CardPreview/index';
-import { CardForm } from '../../components/CardForm/index';
 import cardStore from '../../store/cardList';
 import plusIcon from '../../assets/plus.svg';
+import { CardFormFields } from 'types';
 
 const MainPage: Component = () => {
   const { cardList } = cardStore;
@@ -20,9 +19,9 @@ const MainPage: Component = () => {
           onClick={() => navigate('/newCard')}
         />
         <div class="flex gap-4 flex-wrap mt-4">
-          {cardList.map((item) => (
-            <CardPreview formValues={item} />
-          ))}
+          <For each={cardList}>
+            {(item: CardFormFields) => <CardPreview formValues={item} />}
+          </For>
         </div>
       </div>
     </div>
