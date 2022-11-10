@@ -1,5 +1,7 @@
 import { createRoot } from 'solid-js';
-import { createStore } from 'solid-js/store';
+import { createStore, produce } from 'solid-js/store';
+import { v4 } from 'uuid';
+
 import { CardFormFields } from 'types';
 
 const initialValue: CardFormFields[] = [
@@ -15,10 +17,20 @@ function cardStore() {
 
   const addNewCard = (newCardValues: CardFormFields) =>
     setCardList((prev) => {
-      return [...prev, newCardValues];
+      return [...prev, { id: v4(), ...newCardValues }];
     });
 
-  return { cardList, addNewCard };
+  const updateCard = (newCardValues: CardFormFields) => {
+    const index = cardList.findIndex((item) => item.id === newCardValues.id);
+
+    setCardList(
+      produce((s) => {
+        s[index] = newCardValues;
+      })
+    );
+  };
+
+  return { cardList, addNewCard, updateCard };
 }
 
 export default createRoot(cardStore);

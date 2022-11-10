@@ -1,6 +1,6 @@
-import { Component } from 'solid-js';
+import { Component, createEffect } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { useNavigate } from '@solidjs/router';
+import { useNavigate, useParams } from '@solidjs/router';
 
 import { CardPreview } from '../../components/CardPreview';
 import { CardForm } from '../../components/CardForm';
@@ -9,19 +9,31 @@ import backIcon from '../../assets/back.svg';
 
 import { CardFormFields } from 'types';
 
-const CreateCardPage: Component = () => {
+const EditCardPage: Component = () => {
   const [formValues, setFormValues] = createStore<CardFormFields>({
     cardNumber: '',
     cardHolder: '',
     expiration: '',
   });
-  const { addNewCard } = cardStore;
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const { updateCard, cardList } = cardStore;
 
   const onClearFormValues = () => {
     setFormValues({ cardNumber: '', cardHolder: '', expiration: '' });
     navigate('/');
   };
+
+  createEffect(() => {
+    const cardValues = cardList.find((item) => item.id === id);
+
+    if (cardValues) {
+      setFormValues(cardValues);
+    } else {
+      navigate('/');
+    }
+  });
 
   return (
     <div>
@@ -37,7 +49,7 @@ const CreateCardPage: Component = () => {
         <CardForm
           formValues={formValues}
           setFormValues={setFormValues}
-          onSubmitCardValues={addNewCard}
+          onSubmitCardValues={updateCard}
           onClearFormValues={onClearFormValues}
         />
       </div>
@@ -45,4 +57,4 @@ const CreateCardPage: Component = () => {
   );
 };
 
-export default CreateCardPage;
+export default EditCardPage;

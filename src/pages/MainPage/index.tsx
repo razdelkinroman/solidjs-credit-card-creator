@@ -14,11 +14,11 @@ const MainPage: Component = () => {
       <div>
         <img
           src={plusIcon}
-          width={48}
-          height={48}
+          width={40}
+          height={40}
           onClick={() => navigate('/newCard')}
         />
-        <div class="flex gap-4 flex-wrap mt-4">
+        <div class="flex gap-4 flex-wrap mt-2">
           <For each={cardList}>
             {(item: CardFormFields) => <CardPreview formValues={item} />}
           </For>

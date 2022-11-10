@@ -1,25 +1,24 @@
 import { Setter } from 'solid-js';
 import { createInputMask } from '@solid-primitives/input-mask';
-
+import { Input } from '../../ui/Input';
 import { CardFormFields } from 'types';
 
 interface CardFormProps {
   formValues: CardFormFields;
   setFormValues: Setter<CardFormFields>;
-  addNewCard: (newCardValues: CardFormFields) => void;
+  // eslint-disable-next-line no-unused-vars
+  onSubmitCardValues: (newCardValues: CardFormFields) => void;
   onClearFormValues: () => void;
 }
 
 export function CardForm(props: CardFormProps) {
-  const { formValues, setFormValues, addNewCard, onClearFormValues } = props;
-  let refForm: HTMLFormElement | undefined;
-
   const cardNumberHandler = createInputMask('9999 9999 9999 9999');
   const expirationHandler = createInputMask('99/99');
 
   const onChangeInputHandler = (
     e: InputEvent & {
       currentTarget: HTMLInputElement;
+      target: Element;
     }
   ) => {
     const name = e.currentTarget?.name;
@@ -37,7 +36,7 @@ export function CardForm(props: CardFormProps) {
         break;
     }
 
-    setFormValues((prev) => {
+    props.setFormValues((prev) => {
       return {
         ...prev,
         [name]: value,
@@ -48,64 +47,41 @@ export function CardForm(props: CardFormProps) {
   const onSubmitHandler = (e: Event) => {
     e.preventDefault();
 
-    addNewCard({ ...formValues });
-    onClearFormValues();
+    props.onSubmitCardValues(props.formValues);
+    props.onClearFormValues();
   };
+
+  const value = () => props.formValues.cardNumber || '';
 
   return (
     <>
-      <form ref={refForm} class="w-full" onSubmit={onSubmitHandler}>
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="cardNumber"
-          >
-            cardNumber
-          </label>
-          <input
-            name="cardNumber"
-            id="cardNumber"
-            class="input"
-            placeholder="Enter card number"
-            value={formValues.cardNumber}
-            onInput={onChangeInputHandler}
-          />
-        </div>
+      <form class="w-full flex flex-wrap" onSubmit={onSubmitHandler}>
+        <Input
+          name="cardNumber"
+          label="Card number"
+          placeholder="Enter card number"
+          value={value()}
+          onInput={onChangeInputHandler}
+        />
 
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="cardHolder"
-          >
-            cardholder
-          </label>
-          <input
+        <div class="flex gap-4 w-full">
+          <Input
             name="cardHolder"
-            id="cardHolder"
-            class="input"
+            label="Cardholder"
             placeholder="Enter cardholder"
-            value={formValues.cardHolder}
+            value={props.formValues.cardHolder}
+            onInput={onChangeInputHandler}
+          />
+          <Input
+            name="expiration"
+            label="Expiration"
+            placeholder="Enter expiration"
+            value={props.formValues.expiration}
             onInput={onChangeInputHandler}
           />
         </div>
 
-        <div>
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="expiration"
-          >
-            expiration
-          </label>
-          <input
-            name="expiration"
-            id="expiration"
-            class="input"
-            placeholder="Enter expiration"
-            value={formValues.expiration}
-            onInput={onChangeInputHandler}
-          />
-        </div>
-        <button class="button" type="submit">
+        <button class="button self-end" type="submit">
           Сохранить
         </button>
       </form>
