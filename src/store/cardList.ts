@@ -30,7 +30,13 @@ function cardStore() {
     );
   };
 
-  return { cardList, addNewCard, updateCard };
+  const deleteCard = (id: string) => {
+    const filteredList = cardList.filter((item) => item.id !== id);
+
+    setCardList(filteredList);
+  };
+
+  return { cardList, addNewCard, updateCard, deleteCard };
 }
 
 export default createRoot(cardStore);

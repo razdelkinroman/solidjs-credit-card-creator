@@ -18,10 +18,15 @@ const EditCardPage: Component = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { updateCard, cardList } = cardStore;
+  const { updateCard, cardList, deleteCard } = cardStore;
 
   const onClearFormValues = () => {
     setFormValues({ cardNumber: '', cardHolder: '', expiration: '' });
+    navigate('/');
+  };
+
+  const onDeleteCardHandler = (id: string) => {
+    deleteCard(id);
     navigate('/');
   };
 
@@ -51,6 +56,7 @@ const EditCardPage: Component = () => {
           setFormValues={setFormValues}
           onSubmitCardValues={updateCard}
           onClearFormValues={onClearFormValues}
+          onDeleteCard={onDeleteCardHandler}
         />
       </div>
     </div>

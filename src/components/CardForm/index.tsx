@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Setter } from 'solid-js';
 import { createInputMask } from '@solid-primitives/input-mask';
 import { Input } from '../../ui/Input';
@@ -6,9 +7,9 @@ import { CardFormFields } from 'types';
 interface CardFormProps {
   formValues: CardFormFields;
   setFormValues: Setter<CardFormFields>;
-  // eslint-disable-next-line no-unused-vars
   onSubmitCardValues: (newCardValues: CardFormFields) => void;
   onClearFormValues: () => void;
+  onDeleteCard?: (id: string) => void;
 }
 
 export function CardForm(props: CardFormProps) {
@@ -51,8 +52,6 @@ export function CardForm(props: CardFormProps) {
     props.onClearFormValues();
   };
 
-  const value = () => props.formValues.cardNumber || '';
-
   return (
     <>
       <form class="w-full flex flex-wrap" onSubmit={onSubmitHandler}>
@@ -60,7 +59,7 @@ export function CardForm(props: CardFormProps) {
           name="cardNumber"
           label="Card number"
           placeholder="Enter card number"
-          value={value()}
+          value={props.formValues.cardNumber}
           onInput={onChangeInputHandler}
         />
 
@@ -80,10 +79,24 @@ export function CardForm(props: CardFormProps) {
             onInput={onChangeInputHandler}
           />
         </div>
-
-        <button class="button self-end" type="submit">
-          Сохранить
-        </button>
+        <div class="flex gap-2 self-end">
+          <button class="button-primary " type="submit">
+            Сохранить
+          </button>
+          {props.onDeleteCard ? (
+            <button
+              class="button-danger"
+              type="submit"
+              onClick={() =>
+                props.onDeleteCard && props.formValues.id
+                  ? props.onDeleteCard(props.formValues.id)
+                  : () => {}
+              }
+            >
+              Удалить
+            </button>
+          ) : null}
+        </div>
       </form>
     </>
   );
