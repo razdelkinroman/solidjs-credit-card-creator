@@ -23,7 +23,7 @@ export function CardPreview(props: CardPreviewProps) {
     <div class="">
       <div
         onClick={onclickHandler}
-        class="w-[400px] h-[250px] flex flex-col shadow-md justify-between rounded-2xl p-7 cursor-pointer bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+        class="w-[400px] h-[250px] flex flex-col justify-between rounded-2xl p-7 cursor-pointer bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
       >
         <div class="flex justify-between">
           <img class="h-[60px]" src={chip} alt="chip" />
